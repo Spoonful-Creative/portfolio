@@ -1,6 +1,34 @@
 <?php
+    require 'includes/config.php';
     require 'partials/header.php';
     require 'partials/navigation.php';
+
+// define variables and set to empty values
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+$title = $image_url = $content = $link = '';
+
+// Add data from form
+$title = $_POST['title'];
+$image_url = $_POST['image_url'];
+$content = $_POST['content'];
+$link = $_POST['link'];
+
+// Next, we must do some validation to see if we got valid data
+$errors = [];
+ 
+ addFeedbackToDatabase($dbh, $title, $image_url, $content, $link);
+ // header("Location: dashboard.php");
+    // die();
+  }
+
+  // Here is where you would send an email or save to the database etc
+
+  // $success = addProject($dbh, $title, $image_url, $content, $link);
+
+  // if (!$success) {
+  //   die('There was an error submitting your feedback');
+  // }
+
 ?>
 
         <!-- Start of Content -->
@@ -23,37 +51,37 @@
 
                                 <!-- Title Input -->
                                 <div class="form-group">
-                                    <label for="projectName" class="col-md-4 control-label">Title</label>
+                                    <label for="title" class="col-md-4 control-label">Title</label>
 
                                     <div class="col-md-6">
-                                        <input id="projectName" type="text" class="form-control" name="projectName" value="" required="" autofocus="">
+                                        <input id="title" type="text" class="form-control" name="title" value="" required="" autofocus="">
                                     </div>
                                 </div>
 
                                 <!-- Image Url Input -->
                                 <div class="form-group">
-                                    <label for="projectImgUrl" class="col-md-4 control-label">Image Url</label>
+                                    <label for="image_url" class="col-md-4 control-label">Image Url</label>
 
                                     <div class="col-md-6">
-                                        <input id="projectImgUrl" type="text" class="form-control" name="projectImgUrl" value="" required="" autofocus=""  onchange="readURL(this)">
+                                        <input id="image_url" type="text" class="form-control" name="image_url" value="" required="" autofocus=""  onchange="readURL(this)">
                                     </div>
                                 </div>
 
                                 <!-- Content Input -->
                                 <div class="form-group">
-                                    <label for="projectContent" class="col-md-4 control-label">Content</label>
+                                    <label for="content" class="col-md-4 control-label">Content</label>
 
                                     <div class="col-md-6">
-                                        <input id="projectContent" type="text" class="form-control" name="projectContent" value="" required="" autofocus="">
+                                        <input id="content" type="text" class="form-control" name="content" value="" required="" autofocus="">
                                     </div>
                                 </div>
 
                                 <!-- Link Input -->
                                 <div class="form-group">
-                                    <label for="projectLink" class="col-md-4 control-label">Link</label>
+                                    <label for="link" class="col-md-4 control-label">Link</label>
 
                                     <div class="col-md-6">
-                                        <input id="projectLink" type="text" class="form-control" name="projectLink" value="" required="" autofocus="">
+                                        <input id="link" type="text" class="form-control" name="link" value="" required="" autofocus="">
                                     </div>
                                 </div>
 
@@ -84,8 +112,8 @@
     </div>
     
 
+<script type="text/javascript" src="js/main.js"></script>
 
 <?php
-require 'js/main.js';
 require 'partials/footer.php';
 ?>

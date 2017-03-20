@@ -31,12 +31,14 @@ require 'partials/navigation.php';
                     </div>
                 </div>
                 <!-- End of Card -->
-                <?php
-                endforeach
-                ?>
+            
+<?php
+    endforeach
+?>
+
             </div>
         </div>
+
 <?php
-require 'js/main.js';
 require 'partials/footer.php';
 ?>
