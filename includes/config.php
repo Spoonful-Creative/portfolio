@@ -4,7 +4,6 @@ require 'functions/functions.php';
 
 $host = 'localhost';
 $user = 'root';
-
 $pass = 'root';
 $database = 'Portfolio';
 

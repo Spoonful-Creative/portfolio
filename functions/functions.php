@@ -3,28 +3,22 @@
 function connectDatabase($host, $database, $user, $pass){
   try {
     $dbh = new PDO('mysql:host=' . $host . ';dbname=' . $database, $user, $pass, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
-
     return $dbh;
-
   } catch (PDOException $e) {
     print('Error! ' . $e->getMessage() . '<br>');
     die();
   }
 }
-
-
 // This function returns all websites from the database
 function getProjects($dbh) {
   $sth = $dbh->prepare("SELECT * FROM Projects");
   $sth->execute();
-
   $result = $sth->fetchAll();
   return $result;
 }
 
-
 // This function adds the contents of the feedback from to the database
-function addFeedbackToDatabase($dbh, $title, $image_url, $content, $link) {
+function addProject($dbh, $title, $image_url, $content, $link) {
   //Prepare the statement that will be executed.
   $sth = $dbh->prepare('INSERT INTO projects (title, image_url, content, link, created_at, updated_at) VALUES (:title, :image_url, :content, :link, NOW(), NOW())');
 
@@ -39,6 +33,30 @@ function addFeedbackToDatabase($dbh, $title, $image_url, $content, $link) {
 
   // Execute the statement.
   $success = $sth->execute();
-
   return $success;
+} 
+function deleteProject($id, $dbh) {
+    $result = $dbh->prepare("DELETE FROM projects WHERE id = :id");
+    $result->bindParam(':id', $id);
+    $result->execute();
+}
+function redirect($url) {
+    header('Location: ' . $url);
+    die();
+}
+function updateProject($id, $dbh, $title, $image_url, $content, $link) {
+    $sth = $dbh->prepare("UPDATE projects SET title = :title, image_url = :image_url, content = :content, link = :link WHERE id = :id");
+    // bind the $id to the SQL statement
+    $sth->bindParam(':id', $id, PDO::PARAM_STR);
+    // bind the $name to the SQL statement
+    $sth->bindParam(':title', $title, PDO::PARAM_STR);
+    // bind the $email to the SQL statement
+    $sth->bindParam(':image_url', $image_url, PDO::PARAM_STR);
+    // bind the $feedback to the SQL statement
+    $sth->bindParam(':content', $content, PDO::PARAM_STR);
+        // bind the $feedback to the SQL statement
+    $sth->bindParam(':link', $link, PDO::PARAM_STR);
+    // execute the statement 
+    $result = $sth->execute();
+    return $result;
 }

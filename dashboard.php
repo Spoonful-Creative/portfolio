@@ -16,7 +16,7 @@ $link = $_POST['link'];
 // Next, we must do some validation to see if we got valid data
 $errors = [];
  
- addFeedbackToDatabase($dbh, $title, $image_url, $content, $link);
+ addProject($dbh, $title, $image_url, $content, $link);
  // header("Location: dashboard.php");
     // die();
   }
@@ -109,7 +109,6 @@ $errors = [];
             </div>
         </div>
         <!-- End of Content -->
-    </div>
     
 
 <script type="text/javascript" src="js/main.js"></script>
