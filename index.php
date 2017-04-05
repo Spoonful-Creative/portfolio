@@ -7,11 +7,11 @@
             redirect('index.php');
         }
         
-        // if ($_POST["_method"] == "edit") {
-        //     $id=$_POST['editid'];
-        //     // editProject($id, $dbh);
-        //     redirect('edit.php?id=' . $id);
-        // }
+        if ($_POST["_method"] == "edit") {
+            $id=$_POST['editid'];
+            // editProject($id, $dbh);
+            redirect('edit.php?id=' . $id);
+        }
     }
     require 'partials/header.php';
     require 'partials/navigation.php';

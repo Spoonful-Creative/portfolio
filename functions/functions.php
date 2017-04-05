@@ -44,6 +44,14 @@ function redirect($url) {
     header('Location: ' . $url);
     die();
 }
+function editProject($id, $dbh) {
+  // prepare statement that will be executed
+  $sth = $dbh->prepare("SELECT * FROM projects WHERE id = :id");
+  $sth->bindParam(':id', $id, PDO::PARAM_STR);
+  $sth->execute();
+  $result = $sth->fetch();
+  return $result;
+}
 function updateProject($id, $dbh, $title, $image_url, $content, $link) {
     $sth = $dbh->prepare("UPDATE projects SET title = :title, image_url = :image_url, content = :content, link = :link WHERE id = :id");
     // bind the $id to the SQL statement
