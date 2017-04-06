@@ -1,7 +1,12 @@
 <?php
     require 'includes/config.php';
-    require 'partials/header.php';
-    require 'partials/navigation.php';
+    
+
+if (!loggedIn()){
+    //If the user is not logged in. redirect back to the login page
+    addMessage('You need to login to see this page.');
+    redirect('login.php');
+}
 
 // define variables and set to empty values
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -28,7 +33,8 @@ $errors = [];
   // if (!$success) {
   //   die('There was an error submitting your feedback');
   // }
-
+require 'partials/header.php';
+require 'partials/navigation.php';
 ?>
 
         <!-- Start of Content -->

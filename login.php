@@ -1,71 +1,51 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<?php
+require 'includes/config.php';
 
-    <title>Portfolio</title>
+if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 
-    <!-- Styles -->
-    <!-- Bootstrap -->
-    <link href="css/app.css" rel="stylesheet">
 
-</head>
-<body>
-    <div id="app">
+if (empty($_POST['username']) || empty($_POST['password'])){
+    addMessage('error','Please enter all fields!');
+    redirect('login.php');
+}
 
-        <!-- Start of Navigation -->
-        <nav class="navbar navbar-default navbar-static-top">
-            <div class="container">
-                <div class="navbar-header">
+    $username = strtolower($_POST['username']);
+    $password = strtolower($_POST['password']);
+    $user = getUser($dbh, $username);
+    $passwordMatches = password_verify($password, $user['password']);
 
-                    <!-- Collapsed Hamburger -->
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
-                        <span class="sr-only">Toggle Navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
+    if(!empty($user) && ($username === strtolower($user['username']) || $username === strtolower($user['email'])) && $passwordMatches){
 
-                    <!-- Branding Image -->
-                    <a class="navbar-brand" href="index.php">
-                        Portfolio
-                    </a>
-                </div>
+    $_SESSION['username'] = $user['username'];
+            
+            addMessage('success','You have been logged in');
+            redirect ('index.php');
+    }
+    else{
+      addMessage('error','The username or password do not match our records');
+      }
+    }
 
-                <div class="collapse navbar-collapse" id="app-navbar-collapse">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="nav navbar-nav">
-                        &nbsp;
-                    </ul>
+require 'partials/header.php';
+require 'partials/navigation.php';   
 
-                    <!-- Right Side Of Navbar -->
-                    <ul class="nav navbar-nav navbar-right">
-                            <li><a href="index.php">Home</a></li>
-                            <li><a href="login.php">Login</a></li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-        <!-- End of Navigation -->
+?>
 
         <!-- Start of Content -->
         <div class="container">
             <div class="row">
+             <?= showMessages() ?>
                 <div class="col-md-8 col-md-offset-2">
                     <div class="panel panel-default">
                         <div class="panel-heading">Login</div>
                         <div class="panel-body">
                             <form class="form-horizontal" role="form" method="POST" action="login.php">
-
                                 <!-- Email Input -->
                                 <div class="form-group">
-                                    <label for="email" class="col-md-4 control-label">Email Address</label>
+                                    <label for="username" class="col-md-4 control-label">Username/ Email</label>
 
                                     <div class="col-md-6">
-                                        <input id="email" type="email" class="form-control" name="email" value="" required="" autofocus="">
-
+                                        <input id="username" type="username" class="form-control" name="username" value="" required="" autofocus="">
                                     </div>
                                 </div>
 
@@ -96,9 +76,6 @@
         <!-- End of Content -->
     </div>
 
-    <!-- Scripts -->
-    <!-- Bootstrap JavaScript -->
-    <script src="js/app.js"></script>
-
-</body>
-</html>
+<?php
+require 'partials/footer.php';
+?>

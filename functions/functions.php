@@ -1,5 +1,4 @@
 <?php
-
 function connectDatabase($host, $database, $user, $pass){
   try {
     $dbh = new PDO('mysql:host=' . $host . ';dbname=' . $database, $user, $pass, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
@@ -9,7 +8,7 @@ function connectDatabase($host, $database, $user, $pass){
     die();
   }
 }
-// This function returns all websites from the database
+
 function getProjects($dbh) {
   $sth = $dbh->prepare("SELECT * FROM Projects");
   $sth->execute();
@@ -17,33 +16,32 @@ function getProjects($dbh) {
   return $result;
 }
 
-// This function adds the contents of the feedback from to the database
 function addProject($dbh, $title, $image_url, $content, $link) {
   //Prepare the statement that will be executed.
-  $sth = $dbh->prepare('INSERT INTO projects (title, image_url, content, link, created_at, updated_at) VALUES (:title, :image_url, :content, :link, NOW(), NOW())');
+  $sth = $dbh->prepare('INSERT INTO Projects (title, image_url, content, link, created_at, updated_at) VALUES (:title, :image_url, :content, :link, NOW(), NOW())');
 
-  // Bind the "$title" to the SQL statement.
+  // Binds all values together
   $sth->bindValue(':title', $title, PDO::PARAM_STR);
-  // Bind the "$image_url" to the SQL statement.
   $sth->bindValue(':image_url', $image_url, PDO::PARAM_STR);
-  // Bind the "$content" to the SQL statement.
   $sth->bindValue(':content', $content, PDO::PARAM_STR);
-  // Bind the "$link" to the SQL statement.
   $sth->bindValue(':link', $link, PDO::PARAM_STR);
 
   // Execute the statement.
   $success = $sth->execute();
   return $success;
 } 
+
 function deleteProject($id, $dbh) {
-    $result = $dbh->prepare("DELETE FROM projects WHERE id = :id");
+    $result = $dbh->prepare("DELETE FROM Projects WHERE id = :id");
     $result->bindParam(':id', $id);
     $result->execute();
 }
+
 function redirect($url) {
     header('Location: ' . $url);
     die();
 }
+
 function editProject($id, $dbh) {
   // prepare statement that will be executed
   $sth = $dbh->prepare("SELECT * FROM projects WHERE id = :id");
@@ -52,19 +50,96 @@ function editProject($id, $dbh) {
   $result = $sth->fetch();
   return $result;
 }
+
+function viewProject($id, $dbh) {
+  // prepare statement that will be executed
+  $sth = $dbh->prepare("SELECT * FROM projects WHERE id = :id");
+  $sth->bindParam(':id', $id, PDO::PARAM_STR);
+  $sth->execute();
+  $result = $sth->fetch();
+  return $result;
+}
+
+
 function updateProject($id, $dbh, $title, $image_url, $content, $link) {
     $sth = $dbh->prepare("UPDATE projects SET title = :title, image_url = :image_url, content = :content, link = :link WHERE id = :id");
-    // bind the $id to the SQL statement
     $sth->bindParam(':id', $id, PDO::PARAM_STR);
-    // bind the $name to the SQL statement
     $sth->bindParam(':title', $title, PDO::PARAM_STR);
-    // bind the $email to the SQL statement
     $sth->bindParam(':image_url', $image_url, PDO::PARAM_STR);
-    // bind the $feedback to the SQL statement
     $sth->bindParam(':content', $content, PDO::PARAM_STR);
-        // bind the $feedback to the SQL statement
     $sth->bindParam(':link', $link, PDO::PARAM_STR);
-    // execute the statement 
     $result = $sth->execute();
     return $result;
+}
+
+function addUser($dbh, $username, $email, $password) {
+  $sth = $dbh->prepare('INSERT INTO users (username, email, password) VALUES (:username, :email, :password)');
+
+  $sth->bindValue(':username', $username, PDO::PARAM_STR);
+  $sth->bindValue(':email', $email, PDO::PARAM_STR);
+  $sth->bindValue(':password', $password, PDO::PARAM_STR);
+
+  $success = $sth->execute();
+  return $success;
+} 
+
+function getUser($dbh, $username) {
+  $sth = $dbh->prepare("SELECT * FROM users WHERE username = :username OR email = :email");
+
+  $sth->bindValue(':username', $username, PDO::PARAM_STR);
+  $sth->bindValue(':email', $username, PDO::PARAM_STR);
+  $sth->execute();
+
+  $row = $sth->fetch(PDO::FETCH_ASSOC);
+  if(!empty($row)){
+  return $row;
+} 
+  return false;
+}
+
+function loggedin(){
+  return !empty($_SESSION['username']);
+}
+
+// function addMessage($message){
+//   $_SESSION['message'] = $message;
+// }
+
+// function showMessage(){
+//   $message = '';
+//   if(!empty($_SESSION['message'])){
+//     $message = $_SESSION['message'];
+//     unset($_SESSION['message']);
+//   }
+//   return $message;
+// }
+
+function showMessages($type = null)
+{
+  $messages = '';
+  if(!empty($_SESSION['flash'])) {
+    foreach ($_SESSION['flash'] as $key => $message) {
+      if(($type && $type === $key) || !$type) {
+        foreach ($message as $k => $value) {
+          unset($_SESSION['flash'][$key][$k]);
+          $key = ($key == 'error') ? 'danger': $key;
+          $messages .= '<div class="alert alert-' . $key . '">' . $value . '</div>' . "\n";
+        }
+      }
+    }
+  }
+  return $messages;
+}
+
+function addMessage($type, $message) {
+  $_SESSION['flash'][$type][] = $message;
+}
+
+function selectedProject($id, $dbh) {
+  // prepare statement that will be executed
+  $sth = $dbh->prepare("SELECT * FROM projects WHERE id = :id");
+  $sth->bindParam(':id', $id, PDO::PARAM_STR);
+  $sth->execute();
+  $result = $sth->fetch();
+  return $result;
 }

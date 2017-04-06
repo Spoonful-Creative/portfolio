@@ -4,6 +4,7 @@
 		updateProject($_POST['id'], $dbh, $_POST['title'], $_POST['image_url'], $_POST['content'], $_POST['link']);
 		redirect("index.php");
     }
+
 	$editProject = editProject($_GET['id'], $dbh);
 	require 'partials/header.php';
 	require 'partials/navigation.php';
@@ -13,9 +14,7 @@
             <div class="row">
                 <div class="col-md-8">
                     <div class="panel panel-default">
-                        <!-- <div class="panel-heading">
-                            Update Project
-                        </div> -->
+                       
                         <div class="panel-body">
 
 	<form class="form-horizontal" role="form" method="POST" action="edit.php">
@@ -87,3 +86,7 @@
 
             </div>
         </div>
+
+<?php
+    require 'partials/footer.php';
+?>

@@ -1,26 +1,36 @@
-<?php 
+<?php
     require 'includes/config.php'; 
+    
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
+       
         if ($_POST["_method"] == "delete") {
             $id=$_POST['id'];
             deleteProject($id, $dbh);
             redirect('index.php');
-        }
-        
-        if ($_POST["_method"] == "edit") {
+        } 
+
+     if ($_POST["_method"] == "edit") {
             $id=$_POST['editid'];
             // editProject($id, $dbh);
             redirect('edit.php?id=' . $id);
         }
+
+    if ($_POST["_method"] == "view") {
+            $id=$_POST['viewid'];
+            // editProject($id, $dbh);
+            redirect('view.php?id=' . $id);
+        }
+
     }
     require 'partials/header.php';
     require 'partials/navigation.php';
-    
 ?>
 
         <!-- Start of Content -->
         <div class="container">
             <div class="row">
+            <?= showMessages() ?>
+         
             <!-- Your loop will start here and loop through the card markup -->
                 <?php
                 foreach ($projects as $project):
@@ -35,7 +45,13 @@
                         <div class="panel-body">
                             <h4><?= $project['title'] ?></h4>
                             <p><?= $project['content'] ?></p>
-                            <a href="<?= $project['link'] ?>" class="btn btn-default btn-xs">View</a>
+                            
+                            <form action="index.php" method="POST">
+                                <input name="_method" value="view" type="hidden">
+                                <input name="viewid" value="<?= $project['id'] ?>" type="hidden">
+                                <button class="btn btn-default btn-xs" type="submit">view</button>
+                            </form>
+                           <!--  <a href="<?= $project['id'] ?>" class="btn btn-default btn-xs">View</a> -->
                             
                             <form action="index.php" method="POST">
                                 <input name="_method" value="delete" type="hidden">
@@ -43,7 +59,7 @@
                                 <button class="btn btn-default btn-xs" onclick="return confirm('are you sure you want to delete this item');" type="submit">Delete</button>
                             </form>
 
-                            <form method="POST" action="index.php">
+                            <form action="index.php" method="POST">
                                 <input name="_method" value="edit" type="hidden">
                                 <input name="editid" value="<?= $project['id'] ?>" type="hidden">
                                 <button class="btn btn-default btn-xs" type="submit">Edit</button>
@@ -60,6 +76,6 @@
             </div>
         </div>
 
-<?php 
+<?php
     require 'partials/footer.php';
 ?>
