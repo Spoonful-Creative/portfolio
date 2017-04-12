@@ -8,18 +8,15 @@
             deleteProject($id, $dbh);
             redirect('index.php');
         } 
-
      if ($_POST["_method"] == "edit") {
             $id=$_POST['editid'];
             redirect('edit.php?id=' . $id);
         }
-
     if ($_POST["_method"] == "view") {
             $id=$_POST['viewid'];
             redirect('view.php?id=' . $id);
         }
     }
-
     require 'partials/header.php';
     require 'partials/navigation.php';
 ?>

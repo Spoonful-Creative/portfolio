@@ -5,17 +5,14 @@
         addMessage('error','You need to login to see this page.');
         redirect('login.php');
     }
-
     // define variables and set to empty values
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $title = $image_url = $content = $link = '';
-
     // Add data from database
     $title = e($_POST['title']);
     $image_url = e($_POST['image_url']);
     $content = e($_POST['content']);
     $link = e($_POST['link']);
-
     // Next, we must do some validation to see if we got valid data
     $errors = [];
  
@@ -23,7 +20,6 @@
     addMessage('success','New project has been added.');
     redirect('index.php');
 }
-
 require 'partials/header.php';
 require 'partials/navigation.php';
 ?>

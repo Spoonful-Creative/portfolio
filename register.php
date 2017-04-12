@@ -1,35 +1,27 @@
 <?php
 require 'includes/config.php';
-
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST'){
-	$name = $email = $password = '';
-
-	$username = $_POST['username'];
-	$email = $_POST['email'];
-	$password = $_POST['password'];
-
-	$hash = password_hash($password, PASSWORD_BCRYPT);
-
-	
-	if(empty($_POST['username']) || empty($_POST['email']) || empty($_POST['password'])){
+    $name = $email = $password = '';
+    $username = $_POST['username'];
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    $hash = password_hash($password, PASSWORD_BCRYPT);
+    
+    if(empty($_POST['username']) || empty($_POST['email']) || empty($_POST['password'])){
     addMessage('error','Please enter all fields!');
     redirect('register.php');
-  	}
-
-
-$didInsertWork = addUser($dbh, $username, $email, $hash);
-
-if ($didInsertWork){
-	$_SESSION['username'] = $_POST['username'];
-
-	addmessage('success','You have successfully registered');
-	redirect ('dashboard.php');
+    }
+    
+    $didInsertWork = addUser($dbh, $username, $email, $hash);
+    if ($didInsertWork){
+    $_SESSION['username'] = $_POST['username'];
+    addmessage('success','You have successfully registered');
+    redirect ('index.php');
     }
 }
-	
+    
     require 'partials/header.php';
-    require 'partials/navigation.php';   	
+    require 'partials/navigation.php';      
 ?>
 
 <!-- Start of Content -->
@@ -40,8 +32,8 @@ if ($didInsertWork){
                 <div class="panel-heading">Register</div>
                 <div class="panel-body">
 
-                	<form class="form-horizontal" role="form" method="POST" action="register.php">
-                		<!-- Username Input -->
+                    <form class="form-horizontal" role="form" method="POST" action="register.php">
+                        <!-- Username Input -->
                         <div class="form-group">
                             <label for="username" class="col-md-4 control-label">Username</label>
 
@@ -60,8 +52,8 @@ if ($didInsertWork){
 
                             </div>
                         </div>
-                		
-                		<!-- Password Input -->
+                        
+                        <!-- Password Input -->
                         <div class="form-group">
                             <label for="password" class="col-md-4 control-label">Password</label>
 
@@ -78,8 +70,8 @@ if ($didInsertWork){
                                 <input id="password_confirm" type="password" class="form-control" name="password_confirm" required="">
                             </div>
                         </div>
-                			
-                		<!-- Register Button -->
+                            
+                        <!-- Register Button -->
                         <div class="form-group">
                             <div class="col-md-8 col-md-offset-4">
                                 <button type="submit" class="btn btn-primary">
@@ -87,7 +79,7 @@ if ($didInsertWork){
                                 </button>
                             </div>
                         </div>
-                	</form>
+                    </form>
                 </div>
             </div>
         </div>

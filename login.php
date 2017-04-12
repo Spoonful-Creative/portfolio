@@ -1,32 +1,25 @@
 <?php
     require 'includes/config.php';
-
     if ($_SERVER['REQUEST_METHOD'] === 'POST'){
-
     if (empty($_POST['username']) || empty($_POST['password'])){
         addMessage('error','Please enter all fields!');
         redirect('login.php');
     }
-
     $username = strtolower($_POST['username']);
     $password = strtolower($_POST['password']);
     $user = getUser($dbh, $username);
     $passwordMatches = password_verify($password, $user['password']);
-
     if(!empty($user) && ($username === strtolower($user['username']) || $username === strtolower($user['email'])) && $passwordMatches){
-
         $_SESSION['username'] = $user['username'];
         $_SESSION['email'] = $user['email'];
             
         addMessage('success','You have been logged in');
         redirect ('index.php');
     }
-
     else{
         addMessage('error','The username or password do not match our records');
     }
 }
-
 require 'partials/header.php';
 require 'partials/navigation.php';
 ?>

@@ -4,7 +4,6 @@
 		updateProject(e($_POST['id']), e($dbh, $_POST['title']), e($_POST['image_url']), e($_POST['content']), e($_POST['link']));
 		redirect("index.php");
     }
-
 	$editProject = editProject($_GET['id'], $dbh);
 	require 'partials/header.php';
 	require 'partials/navigation.php';

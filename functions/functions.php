@@ -7,7 +7,6 @@
  * @param string $pass 
  * @return boolean
  */
-
 function connectDatabase($host, $database, $user, $pass){
   try {
     $dbh = new PDO('mysql:host=' . $host . ';dbname=' . $database, $user, $pass, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
@@ -19,12 +18,11 @@ function connectDatabase($host, $database, $user, $pass){
 }
 
 function getProjects($dbh) {
-  $sth = $dbh->prepare("SELECT * FROM projects LIMIT 5");
+  $sth = $dbh->prepare('SELECT * FROM projects');
   $sth->execute();
   $result = $sth->fetchAll();
   return $result;
 }
-
 /**
  * Adding a project to the database
  * @param string $dbh 
@@ -36,21 +34,18 @@ function getProjects($dbh) {
  */
 function addProject($dbh, $title, $image_url, $content, $link) {
   //Prepare the statement that will be executed.
-  $sth = $dbh->prepare('INSERT INTO Projects (title, image_url, content, link, created_at, updated_at) VALUES (:title, :image_url, :content, :link, NOW(), NOW()) LIMIT 1');
-
+  $sth = $dbh->prepare('INSERT INTO Projects (title, image_url, content, link, created_at, updated_at) VALUES (:title, :image_url, :content, :link, NOW(), NOW())');
   // Binds all values together
   $sth->bindValue(':title', $title, PDO::PARAM_STR);
   $sth->bindValue(':image_url', $image_url, PDO::PARAM_STR);
   $sth->bindValue(':content', $content, PDO::PARAM_STR);
   $sth->bindValue(':link', $link, PDO::PARAM_STR);
-
   // Execute the statement.
   $success = $sth->execute();
   return $success;
 } 
-
 function viewProject($id, $dbh) {
-  $sth = $dbh->prepare("SELECT * FROM projects WHERE id = :id LIMIT 1");
+  $sth = $dbh->prepare('SELECT * FROM projects WHERE id = :id');
   
   $sth->bindParam(':id', $id, PDO::PARAM_STR);
   $sth->execute();
@@ -58,26 +53,22 @@ function viewProject($id, $dbh) {
   $result = $sth->fetch();
   return $result;
 }
-
 function editProject($id, $dbh) {
-  $sth = $dbh->prepare("SELECT * FROM projects WHERE id = :id LIMIT 1");
+  $sth = $dbh->prepare('SELECT * FROM projects WHERE id = :id');
   $sth->bindParam(':id', $id, PDO::PARAM_STR);
   $sth->execute();
   $result = $sth->fetch();
   return $result;
 }
-
 function deleteProject($id, $dbh) {
-    $result = $dbh->prepare("DELETE FROM projects WHERE id = :id LIMIT 1");
+    $result = $dbh->prepare('DELETE FROM projects WHERE id = :id');
     $result->bindParam(':id', $id);
     $result->execute();
 }
-
 function redirect($url) {
     header('Location: ' . $url);
     die();
 }
-
 /**
  * Updating data from selected project
  * @param string $dbh 
@@ -88,7 +79,7 @@ function redirect($url) {
  * @return boolean
  */
 function updateProject($id, $dbh, $title, $image_url, $content, $link) {
-    $sth = $dbh->prepare("UPDATE projects SET title = :title, image_url = :image_url, content = :content, link = :link WHERE id = :id LIMIT 1");
+    $sth = $dbh->prepare('UPDATE projects SET title = :title, image_url = :image_url, content = :content, link = :link WHERE id = :id');
     $sth->bindParam(':id', $id, PDO::PARAM_STR);
     $sth->bindParam(':title', $title, PDO::PARAM_STR);
     $sth->bindParam(':image_url', $image_url, PDO::PARAM_STR);
@@ -97,7 +88,6 @@ function updateProject($id, $dbh, $title, $image_url, $content, $link) {
     $result = $sth->execute();
     return $result;
 }
-
 /**
  * Adding a new user to the database
  * @param string $dbh 
@@ -107,14 +97,13 @@ function updateProject($id, $dbh, $title, $image_url, $content, $link) {
  * @return boolean
  */
 function addUser($dbh, $username, $email, $password) {
-  $sth = $dbh->prepare('INSERT INTO users (username, email, password) VALUES (:username, :email, :password) LIMIT 1');
+  $sth = $dbh->prepare('INSERT INTO users (username, email, password) VALUES (:username, :email, :password)');
   $sth->bindValue(':username', $username, PDO::PARAM_STR);
   $sth->bindValue(':email', $email, PDO::PARAM_STR);
   $sth->bindValue(':password', $password, PDO::PARAM_STR);
   $success = $sth->execute();
   return $success;
 } 
-
 /**
  * Logging in as registered user
  * @param type $dbh 
@@ -122,7 +111,7 @@ function addUser($dbh, $username, $email, $password) {
  * @return type
  */
 function getUser($dbh, $username) {
-  $sth = $dbh->prepare('SELECT * FROM users WHERE username = :username OR email = :email LIMIT 1');
+  $sth = $dbh->prepare('SELECT * FROM users WHERE username = :username OR email = :email');
   $sth->bindValue(':username', $username, PDO::PARAM_STR);
   $sth->bindValue(':email', $username, PDO::PARAM_STR);
   $sth->execute();
@@ -157,7 +146,6 @@ function showMessages($type = null)
 function addMessage($type, $message) {
   $_SESSION['flash'][$type][] = $message;
 }
-
 function selectedProject($id, $dbh) {
   $sth = $dbh->prepare('SELECT * FROM projects WHERE id = :id');
   $sth->bindParam(':id', $id, PDO::PARAM_STR);
